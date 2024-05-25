@@ -11,6 +11,9 @@ final class RestTemplateTests: XCTestCase {
         let appetizerURL = baseURL + "appetizers"
         
         let rt = RestTemplate()
+        rt.interceptors = [
+            BasicAuthenticationInterceptor(username: "abc", password: "def")]
+       
         let res:AppetizerResponse? = try await rt.doExecute(url: URL(string: appetizerURL )!,
                      method: HTTPMethod.GET,
                      body: MockData.sampleAppetizer,

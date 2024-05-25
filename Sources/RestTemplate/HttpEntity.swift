@@ -10,16 +10,20 @@ import Foundation
 public class HTTPEntity<T>{
     public var EMPTY: HTTPEntity<Any> = HTTPEntity<Any>()
     
-    private let headers: HttpHeaders?
-    private let body: T?
+    let headers: HttpHeaders?
+    let body: T?
     
     convenience init(){
-        self.init(body: nil, headers: [:])
+        self.init(body: nil, headers: nil )
     }
     
-    init(body: T?, headers: [String:String]) {
+    init(body: T?, headers:HttpHeaders?) {
         self.body = body
-        self.headers = HttpHeaders()
+        self.headers = headers
+    }
+    
+    func hasBody() -> Bool{
+        return self.body != nil
     }
     
 }
