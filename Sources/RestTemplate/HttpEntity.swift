@@ -8,7 +8,7 @@
 import Foundation
 
 public class HTTPEntity<T>{
-    public var EMPTY: HTTPEntity<Any> = HTTPEntity<Any>()
+    public var EMPTY: HTTPEntity<T> = HTTPEntity<T>()
     
     let headers: HttpHeaders?
     let body: T?

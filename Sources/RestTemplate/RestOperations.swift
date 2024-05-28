@@ -25,17 +25,17 @@ public enum HTTPMethod: String {
 public protocol RestOperations{
     // MARK: - GET
     
-    func getForObject<T>(url: String, responseType: T.Type, uriVariables: Any...) async throws -> T
+    func getForObject<RES:Codable>(url: String, responseType: RES.Type,_ uriVariables: String...) async throws -> RES?
     
-    func getForObject<T>(url: String, responseType: T.Type, uriVariables: [String:Any]) async throws -> T
+    func getForObject<RES:Codable>(url: String, responseType: RES.Type, uriVariables: [String:String]) async throws -> RES?
     
-    func getForObject<T>(url: URL, responseType: T.Type) async throws -> T
+    func getForObject<RES:Codable>(url: URL, responseType: RES.Type) async throws -> RES?
     
-    func getForObject<T>(url: String, responseType: T.Type, uriVariables: Any...) async throws -> ResponseEntity<T>
+    func getForEntity<RES:Codable>(url: String, responseType: RES.Type, uriVariables: Any...) async throws -> ResponseEntity<RES>
     
-    func getForObject<T>(url: String, responseType: T.Type, uriVariables: [String:Any]) async throws -> ResponseEntity<T>
+    func getForEntity<RES:Codable>(url: String, responseType: RES.Type, uriVariables: [String:Any]) async throws -> ResponseEntity<RES>
     
-    func getForObject<T>(url: URL, responseType: T.Type) async throws -> ResponseEntity<T>
+    func getForEntity<RES:Codable>(url: URL, responseType: RES.Type) async throws -> ResponseEntity<RES>
     
     
     // MARK: - HEAD
@@ -54,11 +54,11 @@ public protocol RestOperations{
     
     func postForLocation(url: String, request: Any) async throws -> URL
     
-    func postForObject<T>(url: String, request: Any, responseType: T.Type, uriVariables: Any...) async throws -> T
+    func postForObject<T>(url: String, request: Any, responseType: T.Type, uriVariables: Any...) async throws -> T?
     
-    func postForObject<T>(url: String, request: Any, responseType: T.Type, uriVariables: [String:Any]) async throws -> T
+    func postForObject<T>(url: String, request: Any, responseType: T.Type, uriVariables: [String:Any]) async throws -> T?
     
-    func postForObject<T>(url: URL, request: Any, responseType: T.Type) async throws -> T
+    func postForObject<T>(url: URL, request: Any, responseType: T.Type) async throws -> T?
     
     func postForEntity<T>(url: String, request: Any, responseType: T.Type, uriVariables: Any...) async throws -> ResponseEntity<T>
     
@@ -76,11 +76,11 @@ public protocol RestOperations{
     
     // MARK: - PATCH
     
-    func patchForObject<T>(url: String, request: Any, responseType: T.Type, uriVariables: Any...) async throws -> T
+    func patchForObject<T>(url: String, request: Any, responseType: T.Type, uriVariables: Any...) async throws -> T?
     
-    func patchForObject<T>(url: String, request: Any, responseType: T.Type, uriVariables: [String:Any]) async throws -> T
+    func patchForObject<T>(url: String, request: Any, responseType: T.Type, uriVariables: [String:Any]) async throws -> T?
     
-    func patchForObject<T>(url: URL, request: Any, responseType: T.Type) async throws -> T
+    func patchForObject<T>(url: URL, request: Any, responseType: T.Type) async throws -> T?
     
     
     // MARK: - DELETE
@@ -101,16 +101,19 @@ public protocol RestOperations{
     
     // MARK: - exchange
     
-    func exchange<T>(url: String, method: HTTPMethod, requestEntity: HTTPEntity<Any>, responseType: T.Type, uriVariables: Any...) async throws -> ResponseEntity<T>
+    func exchange<T>(url: String, method: HTTPMethod, requestEntity: RequestEntity<Any>, responseType: T.Type, uriVariables: Any...) async throws -> ResponseEntity<T>
     
-    func exchange<T>(url: String, method: HTTPMethod, requestEntity: HTTPEntity<Any>, responseType: T.Type, uriVariables: [String:Any]) async throws -> ResponseEntity<T>
+    func exchange<T>(url: String, method: HTTPMethod, requestEntity: RequestEntity<Any>, responseType: T.Type, uriVariables: [String:Any]) async throws -> ResponseEntity<T>
     
-    func exchange<T>(url: URL, method: HTTPMethod, requestEntity: HTTPEntity<Any>, responseType: T.Type) async throws -> ResponseEntity<T>
+    func exchange<T>(url: URL, method: HTTPMethod, requestEntity: RequestEntity<Any>, responseType: T.Type) async throws -> ResponseEntity<T>
     
-    func exchange<T>(requestEntity: HTTPEntity<Any>, responseType: T.Type) async throws -> ResponseEntity<T>
+    func exchange<T>(requestEntity: RequestEntity<Any>, responseType: T.Type) async throws -> ResponseEntity<T>
     
     // MARK: - execute
     
-    func doExecute<REQ:Codable,RES:Codable>(url: URL, method: HTTPMethod, body: REQ?, responseType: RES.Type) async throws -> RES?
+    func execute<REQ:Codable,RES:Codable>(url: String, method: HTTPMethod, body: REQ?, responseType: RES.Type) async throws -> RES?
+    
+    func execute<REQ:Codable,RES:Codable>(url: URL, method: HTTPMethod, body: REQ?, responseType: RES.Type) async throws -> RES?
+       
     
 }

@@ -7,32 +7,39 @@
 
 import Foundation
 
+//https://stackoverflow.com/questions/51058292/why-cant-we-use-protocol-encodable-as-a-type-in-the-func
+extension Encodable {
+    func toJSONData() -> Data? { try? JSONEncoder().encode(self) }
+}
+
 @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
 public class RestTemplate: RestOperations {
     
+    private let jsonDecoder: JSONDecoder = JSONDecoder()
+    private let jsonEncoder: JSONEncoder = JSONEncoder()
     var interceptors:[ClientHttpRequestInterceptor] = []
     
-    public func getForObject<T>(url: String, responseType: T.Type, uriVariables: Any...) async throws -> T {
+    public func getForObject<RES:Codable>(url: String, responseType: RES.Type,_ uriVariables: String...) async throws -> RES? {
+        return try await execute(url: url, method: .GET, body: nil as String?, responseType: responseType)
+    }
+    
+    public func getForObject<RES:Codable>(url: String, responseType: RES.Type, uriVariables: [String : String]) async throws -> RES? {
         fatalError()
     }
     
-    public func getForObject<T>(url: String, responseType: T.Type, uriVariables: [String : Any]) async throws -> T {
+    public func getForObject<RES:Codable>(url: URL, responseType: RES.Type) async throws -> RES? {
         fatalError()
     }
     
-    public func getForObject<T>(url: URL, responseType: T.Type) async throws -> T {
+    public func getForEntity<RES:Codable>(url: String, responseType: RES.Type, uriVariables: Any...) async throws -> ResponseEntity<RES> {
         fatalError()
     }
     
-    public func getForObject<T>(url: String, responseType: T.Type, uriVariables: Any...) async throws -> ResponseEntity<T> {
+    public func getForEntity<RES:Codable>(url: String, responseType: RES.Type, uriVariables: [String : Any]) async throws -> ResponseEntity<RES> {
         fatalError()
     }
     
-    public func getForObject<T>(url: String, responseType: T.Type, uriVariables: [String : Any]) async throws -> ResponseEntity<T> {
-        fatalError()
-    }
-    
-    public func getForObject<T>(url: URL, responseType: T.Type) async throws -> ResponseEntity<T> {
+    public func getForEntity<RES:Codable>(url: URL, responseType: RES.Type) async throws -> ResponseEntity<RES> {
         fatalError()
     }
     
@@ -60,15 +67,15 @@ public class RestTemplate: RestOperations {
         fatalError()
     }
     
-    public func postForObject<T>(url: String, request: Any, responseType: T.Type, uriVariables: Any...) async throws -> T {
+    public func postForObject<T>(url: String, request: Any, responseType: T.Type, uriVariables: Any...) async throws -> T? {
         fatalError()
     }
     
-    public func postForObject<T>(url: String, request: Any, responseType: T.Type, uriVariables: [String : Any]) async throws -> T {
+    public func postForObject<T>(url: String, request: Any, responseType: T.Type, uriVariables: [String : Any]) async throws -> T? {
         fatalError()
     }
     
-    public func postForObject<T>(url: URL, request: Any, responseType: T.Type) async throws -> T {
+    public func postForObject<T>(url: URL, request: Any, responseType: T.Type) async throws -> T? {
         fatalError()
     }
     
@@ -96,15 +103,15 @@ public class RestTemplate: RestOperations {
         fatalError()
     }
     
-    public func patchForObject<T>(url: String, request: Any, responseType: T.Type, uriVariables: Any...) async throws -> T {
+    public func patchForObject<T>(url: String, request: Any, responseType: T.Type, uriVariables: Any...) async throws -> T? {
         fatalError()
     }
     
-    public func patchForObject<T>(url: String, request: Any, responseType: T.Type, uriVariables: [String : Any]) async throws -> T {
+    public func patchForObject<T>(url: String, request: Any, responseType: T.Type, uriVariables: [String : Any]) async throws -> T? {
         fatalError()
     }
     
-    public func patchForObject<T>(url: URL, request: Any, responseType: T.Type) async throws -> T {
+    public func patchForObject<T>(url: URL, request: Any, responseType: T.Type) async throws -> T? {
         fatalError()
     }
     
@@ -132,27 +139,37 @@ public class RestTemplate: RestOperations {
         fatalError()
     }
     
-    public func exchange<T>(url: String, method: HTTPMethod, requestEntity: HTTPEntity<Any>, responseType: T.Type, uriVariables: Any...) async throws -> ResponseEntity<T> {
+    public func exchange<T>(url: String, method: HTTPMethod, requestEntity: RequestEntity<Any>, responseType: T.Type, uriVariables: Any...) async throws -> ResponseEntity<T> {
         fatalError()
     }
     
-    public func exchange<T>(url: String, method: HTTPMethod, requestEntity: HTTPEntity<Any>, responseType: T.Type, uriVariables: [String : Any]) async throws -> ResponseEntity<T> {
+    public func exchange<T>(url: String, method: HTTPMethod, requestEntity: RequestEntity<Any>, responseType: T.Type, uriVariables: [String : Any]) async throws -> ResponseEntity<T> {
         fatalError()
     }
     
-    public func exchange<T>(url: URL, method: HTTPMethod, requestEntity: HTTPEntity<Any>, responseType: T.Type) async throws -> ResponseEntity<T> {
+    public func exchange<T>(url: URL, method: HTTPMethod, requestEntity: RequestEntity<Any>, responseType: T.Type) async throws -> ResponseEntity<T> {
+        fatalError()
+        
+    }
+    
+    public func exchange<T>(requestEntity: RequestEntity<Any>, responseType: T.Type) async throws -> ResponseEntity<T> {
         fatalError()
     }
     
-    public func exchange<T>(requestEntity: HTTPEntity<Any>, responseType: T.Type) async throws -> ResponseEntity<T> {
-        fatalError()
+    public func execute<REQ:Codable,RES:Codable>(url: String, method: HTTPMethod, body: REQ?, responseType: RES.Type) async throws -> RES?{
+        guard let url = URL(string: url) else { throw RestClientError.invalidData }
+        return try await execute(url: url, method: method, body: body, responseType: responseType)
     }
     
-    public func doExecute<REQ:Codable,RES:Codable>(url: URL, method: HTTPMethod, body: REQ?, responseType: RES.Type) async throws -> RES?{
+    public func execute<REQ:Codable,RES:Codable>(url: URL, method: HTTPMethod, body: REQ?, responseType: RES.Type) async throws -> RES?{
         // create request
         var req = URLRequest(url: url,
                              cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData,
                              timeoutInterval: TimeInterval(60))
+
+        // set body if present
+        if let body = body { req.httpBody = body.toJSONData() }
+        
         req.httpMethod = method.rawValue
         
         // running through interceptors
@@ -160,29 +177,25 @@ public class RestTemplate: RestOperations {
             interceptor.intercept(&req, nil)
         }
         
-        // execute async
-        return try await doExecute(request: req,type: responseType)
+        let (data, response) = try await doExecute(request: req)
         
-    }
-    
-    /// Actual network call to endpoint
-    /// - Parameters:
-    ///   - request: prepared request object with all information about network call
-    ///   - type: response type to deserialize object into
-    ///   - completion: for async execution
-    public func doExecute<T:Codable>(request: URLRequest,type: T.Type) async throws -> T {
-        
-        let (data, response) = try await URLSession.shared.data(for: request)
-        // check data later
         guard let response = response as? HTTPURLResponse, 200 ... 299  ~= response.statusCode else{
             throw RestClientError.invalidResponse
         }
         // decode data to swift object
         do {
-            return try JSONDecoder().decode(T.self, from: data)
+            return try self.jsonDecoder.decode(responseType.self, from: data)
         } catch {
             throw RestClientError.invalidData
-        }
+        }        
+    }
+    
+    /// Actual network call to endpoint
+    /// - Parameters:
+    ///   - request: prepared request object with all information about network call
+    private func doExecute(request: URLRequest) async throws -> (Data, URLResponse){
+        
+         return try await URLSession.shared.data(for: request)
     }
 }
 
