@@ -1,17 +1,17 @@
 //
 //  BodyBuilder.swift
-//  
+//
 //
 //  Created by Vivek Topiya on 25/05/24.
 //
 
 import Foundation
-public protocol CacheControl{}
 
-public protocol MediaType{}
+public protocol CacheControl {}
 
-public protocol BodyBuilder{
-    
+public protocol MediaType {}
+
+public protocol BodyBuilder {
     func header(headerName: String, headerValues: String...) -> BodyBuilder
     
     func header(headers: HttpHeaders?) -> BodyBuilder
@@ -37,15 +37,13 @@ public protocol BodyBuilder{
     func body<T>(body: T?) -> ResponseEntity<T>
     
     func build<T>() -> ResponseEntity<T>
-    
 }
 
-class DefaultBuilder: BodyBuilder{
-    
+class DefaultBuilder: BodyBuilder {
     let statusCode: Any?
-    let headers: HttpHeaders = HttpHeaders()
+    let headers: HttpHeaders = .init()
     
-    init(statusCode: Any?){
+    init(statusCode: Any?) {
         self.statusCode = statusCode
     }
     
@@ -98,7 +96,6 @@ class DefaultBuilder: BodyBuilder{
     }
     
     func build<T>() -> ResponseEntity<T> {
-        return body(body: nil)
+        return self.body(body: nil)
     }
-    
 }

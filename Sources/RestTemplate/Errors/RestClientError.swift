@@ -1,6 +1,6 @@
 //
 //  RestClient.swift
-//  
+//
 //
 //  Created by Vivek Topiya on 25/05/24.
 //
@@ -12,4 +12,3 @@ public enum RestClientError: Error {
     case invalidResponse
     case message(_ error: Error?)
 }
-

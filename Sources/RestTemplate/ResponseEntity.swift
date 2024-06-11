@@ -1,67 +1,66 @@
 //
 //  ResponseEntity.swift
-//  
+//
 //
 //  Created by Vivek Topiya on 25/05/24.
 //
 
 import Foundation
 
-
-public class ResponseEntity<T>: HTTPEntity<T>{
+public class ResponseEntity<T>: HTTPEntity<T> {
     let status: Any
     
     convenience init(status: HTTPStatus) {
         self.init(body: nil, headers: nil, status: status)
     }
     
-    convenience init(body: T?,status: HTTPStatus) {
+    convenience init(body: T?, status: HTTPStatus) {
         self.init(body: body, headers: nil, status: status)
     }
     
-    convenience init(headers: HttpHeaders,status: HTTPStatus) {
+    convenience init(headers: HttpHeaders, status: HTTPStatus) {
         self.init(body: nil, headers: headers, status: status)
     }
     
-    convenience init(body: T?,headers: HttpHeaders?,status: HTTPStatus) {
+    convenience init(body: T?, headers: HttpHeaders?, status: HTTPStatus) {
         self.init(body: body, headers: headers, status: status as Any)
     }
     
-    convenience init(body: T?,headers: HttpHeaders?,rawStatus: Int) {
+    convenience init(body: T?, headers: HttpHeaders?, rawStatus: Int) {
         self.init(body: body, headers: headers, status: rawStatus as Any)
     }
     
-    init(body: T?,headers: HttpHeaders?,status: Any) {
+    init(body: T?, headers: HttpHeaders?, status: Any) {
         self.status = status
-        super.init(body: body,headers: headers)
+        super.init(body: body, headers: headers)
     }
     
     func getStatusCode() -> HTTPStatus {
-        if self.status is Int {
-            return HTTPStatus.valueOf(statusCode: self.status as! Int)
+        if status is Int {
+            return HTTPStatus.valueOf(statusCode: status as! Int)
         }
-        return self.status as! HTTPStatus
+        return status as! HTTPStatus
     }
     
-    func getStatusCodeValue() -> Int{
-        if self.status is Int {
-            return self.status as! Int
+    func getStatusCodeValue() -> Int {
+        if status is Int {
+            return status as! Int
         }
-        return (self.status as! HTTPStatus).value
+        return (status as! HTTPStatus).value
     }
     
     // MARK: - static methods
     
-    public static func status(status: HTTPStatus) -> BodyBuilder{ DefaultBuilder(statusCode: status.value) }
+    public static func status(status: HTTPStatus) -> BodyBuilder { DefaultBuilder(statusCode: status.value) }
     
-    public static func status(status: Int) -> BodyBuilder{ DefaultBuilder(statusCode: status) }
+    public static func status(status: Int) -> BodyBuilder { DefaultBuilder(statusCode: status) }
     
     public static func ok() -> BodyBuilder { status(status: .OK) }
     
-    public static func ok<T>(body: T?) -> ResponseEntity<T>{ ok().body(body: body) }
+    public static func ok<T>(body: T?) -> ResponseEntity<T> { ok().body(body: body) }
     
     public static func of<T>(body: T?) -> ResponseEntity<T> {
-        guard let body = body else{ return notFound().build() }
+        guard let body = body else { return notFound().build() }
         return ok(body: body)
     }
     
@@ -77,6 +76,5 @@ public class ResponseEntity<T>: HTTPEntity<T>{
     
     public static func unprocessableEntity() -> BodyBuilder { status(status: .UNAUTHORIZED) }
     
-    public static func internalServerError() -> BodyBuilder {status(status: .INTERNAL_SERVER_ERROR) }
-    
+    public static func internalServerError() -> BodyBuilder { status(status: .INTERNAL_SERVER_ERROR) }
 }
