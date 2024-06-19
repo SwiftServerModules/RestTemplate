@@ -83,4 +83,15 @@ final class RestTemplateTests: XCTestCase {
         print(res)
         print("######")
     }
+    
+    func testHeaders() async throws {
+        let baseURL = "http://localhost:8080/api/v1/user"
+        
+        let rt = RestTemplate()
+        
+        let res = try await rt.headForHeaders(url: baseURL)
+        print("######")
+        print(res)
+        print("######")
+    }
 }

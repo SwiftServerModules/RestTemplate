@@ -50,9 +50,9 @@ public protocol RestOperations {
     
     // MARK: - HEAD
     
-    func headForHeaders(url: String) async throws -> HttpHeaders
+    func headForHeaders(url: String) async throws -> [String: String]
     
-    func headForHeaders(url: URL) async throws -> HttpHeaders
+    func headForHeaders(url: URL) async throws -> [String: String]
     
     // MARK: - POST
     

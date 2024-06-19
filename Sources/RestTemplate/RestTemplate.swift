@@ -39,12 +39,15 @@ public class RestTemplate: RestOperations {
 
     // MARK: - HEAD
     
-    public func headForHeaders(url: String) async throws -> HttpHeaders {
-        fatalError()
+    public func headForHeaders(url: String) async throws -> [String: String] {
+        guard let url = URL(string: url) else { throw RestClientError.invalidData }
+        return try await headForHeaders(url: url)
     }
     
-    public func headForHeaders(url: URL) async throws -> HttpHeaders {
-        fatalError()
+    public func headForHeaders(url: URL) async throws -> [String: String] {
+        let (_, response) = try await doExecute(url: url, method: .HEAD, body: nil as String?)
+        let headers = response.allHeaderFields.map { ($0 as! String, $1 as! String) }
+        return Dictionary(uniqueKeysWithValues: headers)
     }
     
     // MARK: - POST
