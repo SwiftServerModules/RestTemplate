@@ -19,11 +19,9 @@ public class RestTemplate: RestOperations {
     
     var interceptors: [ClientHttpRequestInterceptor] = []
     
-    public func getForObject<RES: Codable>(url: String, responseType: RES.Type, _ uriVariables: String...) async throws -> RES? {
-        return try await execute(url: url, method: .GET, body: nil as String?, responseType: responseType)
-    }
+    // MARK: - GET
     
-    public func getForObject<RES: Codable>(url: String, responseType: RES.Type, uriVariables: [String: String]) async throws -> RES? {
+    public func getForObject<RES: Codable>(url: String, responseType: RES.Type) async throws -> RES? {
         return try await execute(url: url, method: .GET, body: nil as String?, responseType: responseType)
     }
     
@@ -31,23 +29,17 @@ public class RestTemplate: RestOperations {
         return try await execute(url: url, method: .GET, body: nil as String?, responseType: responseType)
     }
     
-    public func getForEntity<RES: Codable>(url: String, responseType: RES.Type, _ uriVariables: String...) async throws -> ResponseEntity<RES?> {
-        return try await executeForResponseEntity(url: url, method: .GET, body: nil as String?, responseType: responseType)
-    }
-    
-    public func getForEntity<RES: Codable>(url: String, responseType: RES.Type, uriVariables: [String: String]) async throws -> ResponseEntity<RES?> {
+    public func getForEntity<RES: Codable>(url: String, responseType: RES.Type) async throws -> ResponseEntity<RES?> {
         return try await executeForResponseEntity(url: url, method: .GET, body: nil as String?, responseType: responseType)
     }
     
     public func getForEntity<RES: Codable>(url: URL, responseType: RES.Type) async throws -> ResponseEntity<RES?> {
         return try await executeForResponseEntity(url: url, method: .GET, body: nil as String?, responseType: responseType)
     }
+
+    // MARK: - HEAD
     
-    public func headForHeaders(url: String, _ uriVariables: String...) async throws -> HttpHeaders {
-        fatalError()
-    }
-    
-    public func headForHeaders(url: String, uriVariables: [String: String]) async throws -> HttpHeaders {
+    public func headForHeaders(url: String) async throws -> HttpHeaders {
         fatalError()
     }
     
@@ -55,23 +47,13 @@ public class RestTemplate: RestOperations {
         fatalError()
     }
     
-    public func postForLocation(url: String, request: Codable?, _ uriVariables: String...) async throws -> URL {
-        fatalError()
-    }
-    
-    public func postForLocation(url: String, request: Codable?, uriVariables: [String: String]) async throws -> URL {
-        fatalError()
-    }
+    // MARK: - POST
     
     public func postForLocation(url: String, request: Codable?) async throws -> URL {
         fatalError()
     }
     
-    public func postForObject<T: Codable>(url: String, request: Codable?, responseType: T.Type, _ uriVariables: String...) async throws -> T? {
-        return try await execute(url: url, method: .POST, body: request, responseType: responseType)
-    }
-    
-    public func postForObject<T: Codable>(url: String, request: Codable?, responseType: T.Type, uriVariables: [String: String]) async throws -> T? {
+    public func postForObject<T: Codable>(url: String, request: Codable?, responseType: T.Type) async throws -> T? {
         return try await execute(url: url, method: .POST, body: request, responseType: responseType)
     }
     
@@ -79,11 +61,7 @@ public class RestTemplate: RestOperations {
         return try await execute(url: url, method: .POST, body: request, responseType: responseType)
     }
     
-    public func postForEntity<T: Codable>(url: String, request: Codable?, responseType: T.Type, _ uriVariables: String...) async throws -> ResponseEntity<T?> {
-        return try await executeForResponseEntity(url: url, method: .POST, body: request, responseType: responseType)
-    }
-    
-    public func postForEntity<T: Codable>(url: String, request: Codable?, responseType: T.Type, uriVariables: [String: String]) async throws -> ResponseEntity<T?> {
+    public func postForEntity<T: Codable>(url: String, request: Codable?, responseType: T.Type) async throws -> ResponseEntity<T?> {
         return try await executeForResponseEntity(url: url, method: .POST, body: request, responseType: responseType)
     }
     
@@ -91,11 +69,9 @@ public class RestTemplate: RestOperations {
         return try await executeForResponseEntity(url: url, method: .POST, body: request, responseType: responseType)
     }
     
-    public func put(url: String, request: Codable?, _ urlVariables: String...) async throws {
-        fatalError()
-    }
+    // MARK: - PUT
     
-    public func put(url: String, request: Codable?, urlVariables: [String: String]) async throws {
+    public func put(url: String, request: Codable?) async throws {
         fatalError()
     }
     
@@ -103,11 +79,9 @@ public class RestTemplate: RestOperations {
         fatalError()
     }
     
-    public func patchForObject<T>(url: String, request: Codable?, responseType: T.Type, _ uriVariables: String...) async throws -> T? {
-        fatalError()
-    }
+    // MARK: - PATCH
     
-    public func patchForObject<T>(url: String, request: Codable?, responseType: T.Type, uriVariables: [String: String]) async throws -> T? {
+    public func patchForObject<T>(url: String, request: Codable?, responseType: T.Type) async throws -> T? {
         fatalError()
     }
     
@@ -115,11 +89,9 @@ public class RestTemplate: RestOperations {
         fatalError()
     }
     
-    public func delete(url: String, request: Codable?, _ urlVariables: String...) async throws {
-        fatalError()
-    }
+    // MARK: - DELETE
     
-    public func delete(url: String, request: Codable?, urlVariables: [String: String]) async throws {
+    public func delete(url: String, request: Codable?) async throws {
         fatalError()
     }
     
@@ -127,11 +99,9 @@ public class RestTemplate: RestOperations {
         fatalError()
     }
     
-    public func optionsForAllow(url: String, _ uriVariables: String...) async throws -> Set<HTTPMethod> {
-        fatalError()
-    }
+    // MARK: - OPTIONS
     
-    public func optionsForAllow(url: String, uriVariables: [String: String]) async throws -> Set<HTTPMethod> {
+    public func optionsForAllow(url: String) async throws -> Set<HTTPMethod> {
         fatalError()
     }
     
@@ -139,11 +109,9 @@ public class RestTemplate: RestOperations {
         fatalError()
     }
     
-    public func exchange<T>(url: String, method: HTTPMethod, requestEntity: RequestEntity<Codable?>, responseType: T.Type, _ uriVariables: String...) async throws -> ResponseEntity<T> {
-        fatalError()
-    }
+    // MARK: - exchange
     
-    public func exchange<T>(url: String, method: HTTPMethod, requestEntity: RequestEntity<Codable?>, responseType: T.Type, uriVariables: [String: String]) async throws -> ResponseEntity<T> {
+    public func exchange<T>(url: String, method: HTTPMethod, requestEntity: RequestEntity<Codable?>, responseType: T.Type) async throws -> ResponseEntity<T> {
         fatalError()
     }
     
@@ -154,6 +122,8 @@ public class RestTemplate: RestOperations {
     public func exchange<T>(requestEntity: RequestEntity<Codable?>, responseType: T.Type) async throws -> ResponseEntity<T> {
         fatalError()
     }
+    
+    // MARK: - execute
     
     public func execute<RES: Codable>(url: String, method: HTTPMethod, body: Codable?, responseType: RES.Type) async throws -> RES? {
         guard let url = URL(string: url) else { throw RestClientError.invalidData }
@@ -176,6 +146,8 @@ public class RestTemplate: RestOperations {
         
         return try resposeExtracter.extractData(response: response, data: data, responseType: responseType)
     }
+    
+    // MARK: - internal
     
     /// Actual network call to endpoint
     /// - Parameters:
