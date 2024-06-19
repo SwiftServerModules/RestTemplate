@@ -53,17 +53,17 @@ public protocol RestOperations {
     
     func postForLocation(url: String, request: Codable?) async throws -> URL
     
-    func postForObject<T>(url: String, request: Codable?, responseType: T.Type, _ uriVariables: String...) async throws -> T?
+    func postForObject<T: Codable>(url: String, request: Codable?, responseType: T.Type, _ uriVariables: String...) async throws -> T?
     
-    func postForObject<T>(url: String, request: Codable?, responseType: T.Type, uriVariables: [String: String]) async throws -> T?
+    func postForObject<T: Codable>(url: String, request: Codable?, responseType: T.Type, uriVariables: [String: String]) async throws -> T?
     
-    func postForObject<T>(url: URL, request: Codable?, responseType: T.Type) async throws -> T?
+    func postForObject<T: Codable>(url: URL, request: Codable?, responseType: T.Type) async throws -> T?
     
-    func postForEntity<T>(url: String, request: Codable?, responseType: T.Type, _ uriVariables: String...) async throws -> ResponseEntity<T>
+    func postForEntity<T: Codable>(url: String, request: Codable?, responseType: T.Type, _ uriVariables: String...) async throws -> ResponseEntity<T?>
     
-    func postForEntity<T>(url: String, request: Codable?, responseType: T.Type, uriVariables: [String: String]) async throws -> ResponseEntity<T>
+    func postForEntity<T: Codable>(url: String, request: Codable?, responseType: T.Type, uriVariables: [String: String]) async throws -> ResponseEntity<T?>
     
-    func postForEntity<T>(url: URL, request: Codable?, responseType: T.Type) async throws -> ResponseEntity<T>
+    func postForEntity<T: Codable>(url: URL, request: Codable?, responseType: T.Type) async throws -> ResponseEntity<T?>
     
     // MARK: - PUT
     
@@ -109,11 +109,11 @@ public protocol RestOperations {
     
     // MARK: - execute
     
-    func execute<REQ: Codable, RES: Codable>(url: String, method: HTTPMethod, body: REQ?, responseType: RES.Type) async throws -> RES?
+    func execute<RES: Codable>(url: String, method: HTTPMethod, body: Codable?, responseType: RES.Type) async throws -> RES?
     
-    func execute<REQ: Codable, RES: Codable>(url: URL, method: HTTPMethod, body: REQ?, responseType: RES.Type) async throws -> RES?
+    func execute<RES: Codable>(url: URL, method: HTTPMethod, body: Codable?, responseType: RES.Type) async throws -> RES?
     
-    func executeForResponseEntity<REQ: Codable, RES: Codable>(url: String, method: HTTPMethod, body: REQ?, responseType: RES.Type) async throws -> ResponseEntity<RES?>
+    func executeForResponseEntity<RES: Codable>(url: String, method: HTTPMethod, body: Codable?, responseType: RES.Type) async throws -> ResponseEntity<RES?>
     
-    func executeForResponseEntity<REQ: Codable, RES: Codable>(url: URL, method: HTTPMethod, body: REQ?, responseType: RES.Type) async throws -> ResponseEntity<RES?>
+    func executeForResponseEntity<RES: Codable>(url: URL, method: HTTPMethod, body: Codable?, responseType: RES.Type) async throws -> ResponseEntity<RES?>
 }

@@ -7,7 +7,6 @@
 
 import Foundation
 
-// https://stackoverflow.com/questions/51058292/why-cant-we-use-protocol-encodable-as-a-type-in-the-func
 extension Encodable {
     func toJSONData() -> Data? { try? JSONEncoder().encode(self) }
 }
@@ -68,28 +67,28 @@ public class RestTemplate: RestOperations {
         fatalError()
     }
     
-    public func postForObject<T>(url: String, request: Codable?, responseType: T.Type, _ uriVariables: String...) async throws -> T? {
-        fatalError()
+    public func postForObject<T: Codable>(url: String, request: Codable?, responseType: T.Type, _ uriVariables: String...) async throws -> T? {
+        return try await execute(url: url, method: .POST, body: request, responseType: responseType)
     }
     
-    public func postForObject<T>(url: String, request: Codable?, responseType: T.Type, uriVariables: [String: String]) async throws -> T? {
-        fatalError()
+    public func postForObject<T: Codable>(url: String, request: Codable?, responseType: T.Type, uriVariables: [String: String]) async throws -> T? {
+        return try await execute(url: url, method: .POST, body: request, responseType: responseType)
     }
     
-    public func postForObject<T>(url: URL, request: Codable?, responseType: T.Type) async throws -> T? {
-        fatalError()
+    public func postForObject<T: Codable>(url: URL, request: Codable?, responseType: T.Type) async throws -> T? {
+        return try await execute(url: url, method: .POST, body: request, responseType: responseType)
     }
     
-    public func postForEntity<T>(url: String, request: Codable?, responseType: T.Type, _ uriVariables: String...) async throws -> ResponseEntity<T> {
-        fatalError()
+    public func postForEntity<T: Codable>(url: String, request: Codable?, responseType: T.Type, _ uriVariables: String...) async throws -> ResponseEntity<T?> {
+        return try await executeForResponseEntity(url: url, method: .POST, body: request, responseType: responseType)
     }
     
-    public func postForEntity<T>(url: String, request: Codable?, responseType: T.Type, uriVariables: [String: String]) async throws -> ResponseEntity<T> {
-        fatalError()
+    public func postForEntity<T: Codable>(url: String, request: Codable?, responseType: T.Type, uriVariables: [String: String]) async throws -> ResponseEntity<T?> {
+        return try await executeForResponseEntity(url: url, method: .POST, body: request, responseType: responseType)
     }
     
-    public func postForEntity<T>(url: URL, request: Codable?, responseType: T.Type) async throws -> ResponseEntity<T> {
-        fatalError()
+    public func postForEntity<T: Codable>(url: URL, request: Codable?, responseType: T.Type) async throws -> ResponseEntity<T?> {
+        return try await executeForResponseEntity(url: url, method: .POST, body: request, responseType: responseType)
     }
     
     public func put(url: String, request: Codable?, _ urlVariables: String...) async throws {
@@ -156,23 +155,23 @@ public class RestTemplate: RestOperations {
         fatalError()
     }
     
-    public func execute<REQ: Codable, RES: Codable>(url: String, method: HTTPMethod, body: REQ?, responseType: RES.Type) async throws -> RES? {
+    public func execute<RES: Codable>(url: String, method: HTTPMethod, body: Codable?, responseType: RES.Type) async throws -> RES? {
         guard let url = URL(string: url) else { throw RestClientError.invalidData }
         return try await execute(url: url, method: method, body: body, responseType: responseType)
     }
     
-    public func execute<REQ: Codable, RES: Codable>(url: URL, method: HTTPMethod, body: REQ?, responseType: RES.Type) async throws -> RES? {
+    public func execute<RES: Codable>(url: URL, method: HTTPMethod, body: Codable?, responseType: RES.Type) async throws -> RES? {
         let (data, response) = try await doExecute(url: url, method: method, body: body)
         
         return try resposeExtracter.extractData(response: response, data: data, responseType: responseType)
     }
     
-    public func executeForResponseEntity<REQ, RES>(url: String, method: HTTPMethod, body: REQ?, responseType: RES.Type) async throws -> ResponseEntity<RES?> where REQ: Decodable, REQ: Encodable, RES: Decodable, RES: Encodable {
+    public func executeForResponseEntity<RES: Codable>(url: String, method: HTTPMethod, body: Codable?, responseType: RES.Type) async throws -> ResponseEntity<RES?> {
         guard let url = URL(string: url) else { throw RestClientError.invalidData }
         return try await executeForResponseEntity(url: url, method: method, body: body, responseType: responseType)
     }
     
-    public func executeForResponseEntity<REQ, RES>(url: URL, method: HTTPMethod, body: REQ?, responseType: RES.Type) async throws -> ResponseEntity<RES?> where REQ: Decodable, REQ: Encodable, RES: Decodable, RES: Encodable {
+    public func executeForResponseEntity<RES: Codable>(url: URL, method: HTTPMethod, body: Codable?, responseType: RES.Type) async throws -> ResponseEntity<RES?> {
         let (data, response) = try await doExecute(url: url, method: method, body: body)
         
         return try resposeExtracter.extractData(response: response, data: data, responseType: responseType)
@@ -181,14 +180,16 @@ public class RestTemplate: RestOperations {
     /// Actual network call to endpoint
     /// - Parameters:
     ///   - request: prepared request object with all information about network call
-    private func doExecute<REQ: Codable>(url: URL, method: HTTPMethod, body: REQ?) async throws -> (Data, HTTPURLResponse) {
+    private func doExecute(url: URL, method: HTTPMethod, body: Codable?) async throws -> (Data, HTTPURLResponse) {
         // create request
         var request = URLRequest(url: url,
                                  cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData,
                                  timeoutInterval: TimeInterval(60))
 
         // set body if present
-        if let body = body { request.httpBody = body.toJSONData() }
+        if let body = body { request.httpBody = body.toJSONData()
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
         
         request.httpMethod = method.rawValue
         

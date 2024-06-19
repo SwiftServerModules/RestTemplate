@@ -33,3 +33,9 @@ enum MockData {
 
     static let appetizers = [sampleAppetizer, sampleAppetizer, sampleAppetizer, sampleAppetizer]
 }
+
+struct User: Codable, Identifiable, Equatable {
+    let id: CLong?
+    let username: String?
+    let age: Int?
+}
