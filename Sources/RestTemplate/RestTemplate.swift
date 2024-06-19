@@ -101,12 +101,17 @@ public class RestTemplate: RestOperations {
     
     // MARK: - OPTIONS
     
-    public func optionsForAllow(url: String) async throws -> Set<HTTPMethod> {
-        fatalError()
+    public func optionsForAllow(url: String) async throws -> [HTTPMethod] {
+        guard let url = URL(string: url) else { throw RestClientError.invalidData }
+        return try await optionsForAllow(url: url)
     }
     
-    public func optionsForAllow(url: URL) async throws -> Set<HTTPMethod> {
-        fatalError()
+    public func optionsForAllow(url: URL) async throws -> [HTTPMethod] {
+        let (_, response) = try await doExecute(url: url, method: .OPTIONS, body: nil as String?)
+        let value = response.value(forHTTPHeaderField: HttpHeaders.ALLOW)
+        
+        guard let value = value else { return [] }
+        return value.components(separatedBy: ",").map { HTTPMethod.valueOf(method: $0) }
     }
     
     // MARK: - exchange

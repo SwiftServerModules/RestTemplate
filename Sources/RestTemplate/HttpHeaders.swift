@@ -9,6 +9,7 @@ import Foundation
 
 public struct HttpHeaders{
     public static let AUTHORIZATION: String = "Authorization"
+    public static let ALLOW: String = "Allow"
 
     public static func encodeBasicAuth(_ username: String, _ password: String) -> String {
         return ((username + ":" + password)

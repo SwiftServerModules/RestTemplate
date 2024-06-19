@@ -16,6 +16,21 @@ public enum HTTPMethod: String {
     case DELETE
     case OPTIONS
     case TRACE
+    
+    public static func valueOf(method: String) -> HTTPMethod {
+        switch method {
+        case "GET": return .GET
+        case "HEAD": return .HEAD
+        case "POST": return .POST
+        case "PUT": return .PUT
+        case "PATCH": return .PATCH
+        case "DELETE": return .DELETE
+        case "OPTIONS": return .OPTIONS
+        case "TRACE": return .TRACE
+        default:
+            return HTTPMethod(rawValue: method)!
+        }
+    }
 }
 
 /**
@@ -71,9 +86,9 @@ public protocol RestOperations {
     
     // MARK: - OPTIONS
     
-    func optionsForAllow(url: String) async throws -> Set<HTTPMethod>
+    func optionsForAllow(url: String) async throws -> [HTTPMethod]
     
-    func optionsForAllow(url: URL) async throws -> Set<HTTPMethod>
+    func optionsForAllow(url: URL) async throws -> [HTTPMethod]
     
     // MARK: - exchange
     

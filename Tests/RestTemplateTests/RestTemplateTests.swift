@@ -72,4 +72,15 @@ final class RestTemplateTests: XCTestCase {
         XCTAssertEqual(user, res)
         print(res!)
     }
+    
+    func testOptions() async throws {
+        let baseURL = "http://localhost:8080/api/v1/user"
+        
+        let rt = RestTemplate()
+        
+        let res = try await rt.optionsForAllow(url: baseURL)
+        print("######")
+        print(res)
+        print("######")
+    }
 }
