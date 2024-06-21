@@ -74,9 +74,9 @@ public protocol RestOperations {
     
     // MARK: - PATCH
     
-    func patchForObject<T>(url: String, request: Codable?, responseType: T.Type) async throws -> T?
+    func patchForObject<T: Codable>(url: String, request: Codable?, responseType: T.Type) async throws -> T?
     
-    func patchForObject<T>(url: URL, request: Codable?, responseType: T.Type) async throws -> T?
+    func patchForObject<T: Codable>(url: URL, request: Codable?, responseType: T.Type) async throws -> T?
     
     // MARK: - DELETE
     

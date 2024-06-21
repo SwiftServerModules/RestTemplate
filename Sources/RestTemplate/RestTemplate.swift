@@ -88,12 +88,13 @@ public class RestTemplate: RestOperations {
     
     // MARK: - PATCH
     
-    public func patchForObject<T>(url: String, request: Codable?, responseType: T.Type) async throws -> T? {
-        fatalError()
+    public func patchForObject<T: Codable>(url: String, request: Codable?, responseType: T.Type) async throws -> T? {
+        guard let url = URL(string: url) else { throw RestClientError.invalidData }
+        return try await patchForObject(url: url, request: request, responseType: responseType)
     }
     
-    public func patchForObject<T>(url: URL, request: Codable?, responseType: T.Type) async throws -> T? {
-        fatalError()
+    public func patchForObject<T: Codable>(url: URL, request: Codable?, responseType: T.Type) async throws -> T? {
+        return try await execute(url: url, method: .PATCH, body: request, responseType: responseType)
     }
     
     // MARK: - DELETE

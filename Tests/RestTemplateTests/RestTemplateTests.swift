@@ -124,4 +124,18 @@ final class RestTemplateTests: XCTestCase {
         
         try await rt.put(url: baseURL, request: user)
     }
+    
+    func testPatch() async throws {
+        let baseURL = "http://localhost:8080/api/v1/user/1"
+        let user = User(id: 1, username: "spiderman", age: 19)
+       
+        let rt = RestTemplate()
+        
+        let res = try await rt.patchForObject(url: baseURL, request: user, responseType: User.self)
+        
+        print("######")
+        print(res!)
+        XCTAssertEqual(user, res!)
+        print("######")
+    }
 }
