@@ -56,7 +56,7 @@ public protocol RestOperations {
     
     // MARK: - POST
     
-    func postForLocation(url: String, request: Codable?) async throws -> URL
+    func postForLocation(url: String, request: Codable?) async throws -> URL?
     
     func postForObject<T: Codable>(url: String, request: Codable?, responseType: T.Type) async throws -> T?
     

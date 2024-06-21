@@ -52,8 +52,11 @@ public class RestTemplate: RestOperations {
     
     // MARK: - POST
     
-    public func postForLocation(url: String, request: Codable?) async throws -> URL {
-        fatalError()
+    public func postForLocation(url: String, request: Codable?) async throws -> URL? {
+        guard let url = URL(string: url) else { throw RestClientError.invalidData }
+        let (_, response) = try await doExecute(url: url, method: .POST, body: request)
+        guard let location = response.value(forHTTPHeaderField: "Location") else { return URL(string: "") }
+        return URL(string: location)
     }
     
     public func postForObject<T: Codable>(url: String, request: Codable?, responseType: T.Type) async throws -> T? {

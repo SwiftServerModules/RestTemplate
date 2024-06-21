@@ -94,4 +94,17 @@ final class RestTemplateTests: XCTestCase {
         print(res)
         print("######")
     }
+    
+    func testLocation() async throws {
+        let baseURL = "http://localhost:8080/api/v1/user/add"
+        let user = User(id: 1, username: "spiderman", age: 19)
+        
+        let rt = RestTemplate()
+        
+        let res = try await rt.postForLocation(url: baseURL, request: user)
+        print("######")
+        print(res!)
+        XCTAssertEqual("/1", res!.absoluteString)
+        print("######")
+    }
 }
