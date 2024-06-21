@@ -80,9 +80,9 @@ public protocol RestOperations {
     
     // MARK: - DELETE
     
-    func delete(url: String, request: Codable?) async throws -> Void
+    func delete(url: String) async throws -> Void
     
-    func delete(url: URL, request: Codable?) async throws -> Void
+    func delete(url: URL) async throws -> Void
     
     // MARK: - OPTIONS
     

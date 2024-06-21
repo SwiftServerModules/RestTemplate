@@ -107,4 +107,12 @@ final class RestTemplateTests: XCTestCase {
         XCTAssertEqual("/1", res!.absoluteString)
         print("######")
     }
+    
+    func testDelete() async throws {
+        let baseURL = "http://localhost:8080/api/v1/user/1"
+       
+        let rt = RestTemplate()
+        
+        try await rt.delete(url: baseURL)
+    }
 }

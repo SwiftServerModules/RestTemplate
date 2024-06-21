@@ -97,12 +97,13 @@ public class RestTemplate: RestOperations {
     
     // MARK: - DELETE
     
-    public func delete(url: String, request: Codable?) async throws {
-        fatalError()
+    public func delete(url: String) async throws {
+        guard let url = URL(string: url) else { throw RestClientError.invalidData }
+        return try await delete(url: url)
     }
     
-    public func delete(url: URL, request: Codable?) async throws {
-        fatalError()
+    public func delete(url: URL) async throws {
+        let _ = try await doExecute(url: url, method: .DELETE, body: nil as String?)
     }
     
     // MARK: - OPTIONS
