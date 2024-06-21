@@ -115,4 +115,13 @@ final class RestTemplateTests: XCTestCase {
         
         try await rt.delete(url: baseURL)
     }
+
+    func testPut() async throws {
+        let baseURL = "http://localhost:8080/api/v1/user/1"
+        let user = User(id: 1, username: "spiderman", age: 19)
+       
+        let rt = RestTemplate()
+        
+        try await rt.put(url: baseURL, request: user)
+    }
 }

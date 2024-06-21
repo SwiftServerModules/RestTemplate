@@ -78,11 +78,12 @@ public class RestTemplate: RestOperations {
     // MARK: - PUT
     
     public func put(url: String, request: Codable?) async throws {
-        fatalError()
+        guard let url = URL(string: url) else { throw RestClientError.invalidData }
+        return try await put(url: url, request: request)
     }
     
     public func put(url: URL, request: Codable?) async throws {
-        fatalError()
+        let _ = try await doExecute(url: url, method: .PUT, body: request)
     }
     
     // MARK: - PATCH
