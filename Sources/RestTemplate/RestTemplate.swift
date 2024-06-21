@@ -40,8 +40,7 @@ public class RestTemplate: RestOperations {
     // MARK: - HEAD
     
     public func headForHeaders(url: String) async throws -> [String: String] {
-        guard let url = URL(string: url) else { throw RestClientError.invalidData }
-        return try await headForHeaders(url: url)
+        return try await headForHeaders(url: createUrl(url))
     }
     
     public func headForHeaders(url: URL) async throws -> [String: String] {
@@ -53,8 +52,7 @@ public class RestTemplate: RestOperations {
     // MARK: - POST
     
     public func postForLocation(url: String, request: Codable?) async throws -> URL? {
-        guard let url = URL(string: url) else { throw RestClientError.invalidData }
-        let (_, response) = try await doExecute(url: url, method: .POST, body: request)
+        let (_, response) = try await doExecute(url: createUrl(url), method: .POST, body: request)
         guard let location = response.value(forHTTPHeaderField: "Location") else { return URL(string: "") }
         return URL(string: location)
     }
@@ -78,8 +76,7 @@ public class RestTemplate: RestOperations {
     // MARK: - PUT
     
     public func put(url: String, request: Codable?) async throws {
-        guard let url = URL(string: url) else { throw RestClientError.invalidData }
-        return try await put(url: url, request: request)
+        return try await put(url: createUrl(url), request: request)
     }
     
     public func put(url: URL, request: Codable?) async throws {
@@ -89,8 +86,7 @@ public class RestTemplate: RestOperations {
     // MARK: - PATCH
     
     public func patchForObject<T: Codable>(url: String, request: Codable?, responseType: T.Type) async throws -> T? {
-        guard let url = URL(string: url) else { throw RestClientError.invalidData }
-        return try await patchForObject(url: url, request: request, responseType: responseType)
+        return try await patchForObject(url: createUrl(url), request: request, responseType: responseType)
     }
     
     public func patchForObject<T: Codable>(url: URL, request: Codable?, responseType: T.Type) async throws -> T? {
@@ -100,8 +96,7 @@ public class RestTemplate: RestOperations {
     // MARK: - DELETE
     
     public func delete(url: String) async throws {
-        guard let url = URL(string: url) else { throw RestClientError.invalidData }
-        return try await delete(url: url)
+        return try await delete(url: createUrl(url))
     }
     
     public func delete(url: URL) async throws {
@@ -111,8 +106,7 @@ public class RestTemplate: RestOperations {
     // MARK: - OPTIONS
     
     public func optionsForAllow(url: String) async throws -> [HTTPMethod] {
-        guard let url = URL(string: url) else { throw RestClientError.invalidData }
-        return try await optionsForAllow(url: url)
+        return try await optionsForAllow(url: createUrl(url))
     }
     
     public func optionsForAllow(url: URL) async throws -> [HTTPMethod] {
@@ -140,8 +134,7 @@ public class RestTemplate: RestOperations {
     // MARK: - execute
     
     public func execute<RES: Codable>(url: String, method: HTTPMethod, body: Codable?, responseType: RES.Type) async throws -> RES? {
-        guard let url = URL(string: url) else { throw RestClientError.invalidData }
-        return try await execute(url: url, method: method, body: body, responseType: responseType)
+        return try await execute(url: createUrl(url), method: method, body: body, responseType: responseType)
     }
     
     public func execute<RES: Codable>(url: URL, method: HTTPMethod, body: Codable?, responseType: RES.Type) async throws -> RES? {
@@ -151,8 +144,7 @@ public class RestTemplate: RestOperations {
     }
     
     public func executeForResponseEntity<RES: Codable>(url: String, method: HTTPMethod, body: Codable?, responseType: RES.Type) async throws -> ResponseEntity<RES?> {
-        guard let url = URL(string: url) else { throw RestClientError.invalidData }
-        return try await executeForResponseEntity(url: url, method: method, body: body, responseType: responseType)
+        return try await executeForResponseEntity(url: createUrl(url), method: method, body: body, responseType: responseType)
     }
     
     public func executeForResponseEntity<RES: Codable>(url: URL, method: HTTPMethod, body: Codable?, responseType: RES.Type) async throws -> ResponseEntity<RES?> {
@@ -190,5 +182,10 @@ public class RestTemplate: RestOperations {
         }
         
         return (data, response)
+    }
+    
+    private func createUrl(_ url: String) throws -> URL {
+        guard let url = URL(string: url) else { throw RestClientError.invalidUrl }
+        return url
     }
 }

@@ -8,6 +8,7 @@
 import Foundation
 
 public enum RestClientError: Error {
+    case invalidUrl
     case invalidData
     case invalidResponse
     case message(_ error: Error?)
