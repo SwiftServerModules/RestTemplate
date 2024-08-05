@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// A list of Http headers and useful helper methods for header operations
 public struct HttpHeaders{
     public static let AUTHORIZATION: String = "Authorization"
     public static let ALLOW: String = "Allow"

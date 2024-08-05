@@ -7,10 +7,15 @@
 
 import Foundation
 
-/**
- ``ClientHttpRequestInterceptor`` implementation to apply a given HTTP Basic Authentication username/password pair,
- unless a custom Authorization header has already been set.
- */
+/// implementation of ``ClientHttpRequestInterceptor``  to apply a given HTTP Basic Authentication username/password pair,
+/// unless a custom Authorization header has already been set.
+/// 
+/// usage
+/// ```swift
+/// rt.interceptors = [
+/// BasicAuthenticationInterceptor(username: "abc", password: "def"),
+/// ]
+/// ```	
 public struct BasicAuthenticationInterceptor: ClientHttpRequestInterceptor {
     private let encodedCredentials: String
     

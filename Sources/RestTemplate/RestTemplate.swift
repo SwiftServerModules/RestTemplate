@@ -7,10 +7,22 @@
 
 import Foundation
 
-extension Encodable {
-    func toJSONData() -> Data? { try? JSONEncoder().encode(self) }
-}
 
+
+/// async REST client to perform HTTP requests, exposing a simple, template method API over underlying HTTP client  URLSession. works with all apple platforms as of now, linux and windows support coming soon.
+///
+/// Use as below
+/// > Important: Requires all request and response class/structs to conform `Codeable`,`Encodable` or `Decodable`
+/// ```swift
+/// let rt = RestTemplate()
+/// let user: User = try await rt.getForObject(url: "https://example.com/api/user/1", responseType: User.self)
+/// ```
+/// You can add interceptors to modify or log request before execution. add interceptors as below, they are run as provided in array. see ``BasicAuthenticationInterceptor``
+/// ```swift
+/// rt.interceptors = [
+/// BasicAuthenticationInterceptor(username: "abc", password: "def"),
+/// ]
+/// ```
 @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
 public class RestTemplate: RestOperations {
     private let jsonDecoder: JSONDecoder = .init()
@@ -155,9 +167,13 @@ public class RestTemplate: RestOperations {
     
     // MARK: - internal
     
-    /// Actual network call to endpoint
+    
+    /// Does the actual call to endpoint using URLSession(hence only compatible with Apple platform as on now)
     /// - Parameters:
-    ///   - request: prepared request object with all information about network call
+    ///   - url: the URL
+    ///   - method: the HTTP method (GET, POST, etc)
+    ///   - body: body to be sent with request (may be null)
+    /// - Returns: Data and HTTPURLResponse to process later
     private func doExecute(url: URL, method: HTTPMethod, body: Codable?) async throws -> (Data, HTTPURLResponse) {
         // create request
         var request = URLRequest(url: url,
@@ -184,6 +200,9 @@ public class RestTemplate: RestOperations {
         return (data, response)
     }
     
+    /// A little helper method to convert string url to URL object
+    /// - Parameter url: url in String
+    /// - Returns: the URL object
     private func createUrl(_ url: String) throws -> URL {
         guard let url = URL(string: url) else { throw RestClientError.invalidUrl }
         return url

@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Intercepts client-side HTTP requests. Implementations of this interface can be ``RestTemplate.interceptors``
+/// Intercepts client-side HTTP requests. Implementations of this interface can be ``RestTemplate``'s interceptops variable
 public protocol ClientHttpRequestInterceptor {
     /// Intercept the given request, modifiable object for adding custom header or customizing request
     /// - Parameters:

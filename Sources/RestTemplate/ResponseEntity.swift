@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Extension of ``HTTPEntity`` that adds an ``HTTPStatus`` status code. Used in ``RestTemplate``
 public class ResponseEntity<T>: HTTPEntity<T> {
     let status: Any
     

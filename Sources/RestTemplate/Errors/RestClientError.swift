@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// exceptions thrown by ``RestTemplate`` in case a request fails because of a server error response
 public enum RestClientError: Error {
     case invalidUrl
     case invalidData

@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Represents an HTTP request or response entity, consisting of headers and body.
 public class HTTPEntity<T> {
     let headers: HttpHeaders?
     let body: T?

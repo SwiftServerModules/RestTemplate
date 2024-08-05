@@ -7,10 +7,13 @@
 
 import Foundation
 
+/// A builder for creating "Cache-Control" HTTP response headers.
 public protocol CacheControl {}
 
+/// support for quality parameters as defined in the HTTP specification.
 public protocol MediaType {}
 
+/// Defines a builder that adds a body to the response entity.
 public protocol BodyBuilder {
     func header(headerName: String, headerValues: String...) -> BodyBuilder
     
